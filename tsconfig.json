@@ -15,7 +15,10 @@
     "strict": true,
     "skipLibCheck": true,
     "rootDir": "src",
-    "types": ["webpack-env"],
+    "types": [
+      "webpack-env",
+      "./src/types/webpack-hot.d.ts"
+    ],
   },
   "include": ["src"]
 }

@@ -9,11 +9,14 @@
  */
 
 import RefreshRuntime from "react-refresh/runtime";
-var safeThis = (function () {
+
+declare const __react_refresh_library__: string | undefined;
+
+var safeThis = (function (this: any) {
 	// copied from core-js-pure/features/global-this
 	"use strict";
 
-	var check = function (it) {
+	var check = function (it: any) {
 		return it && it.Math == Math && it;
 	};
 
@@ -26,7 +29,7 @@ var safeThis = (function () {
 		check(typeof self == "object" && self) ||
 		check(typeof __webpack_require__.g == "object" && __webpack_require__.g) ||
 		// eslint-disable-next-line no-new-func -- fallback
-		(function () {
+		(function (this: any) {
 			return this;
 		})() ||
 		this ||
@@ -50,7 +53,7 @@ if (process.env.NODE_ENV !== "production") {
 			RefreshRuntime.injectIntoGlobalHook(safeThis);
 
 			// Empty implementation to avoid "ReferenceError: variable is not defined" in module which didn't pass builtin:react-refresh-loader
-			safeThis.$RefreshSig$ = () => type => type;
+			safeThis.$RefreshSig$ = () => (type: any) => type;
 			safeThis.$RefreshReg$ = () => {};
 
 			// Mark the runtime as injected to prevent double-injection

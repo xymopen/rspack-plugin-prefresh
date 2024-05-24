@@ -10,6 +10,10 @@
 
 import Refresh from "react-refresh/runtime";
 
+declare global {
+	var onHotAcceptError: (message: string) => void | undefined;
+}
+
 /**
  * Extracts exports from a webpack module object.
  * @param moduleId A Webpack module ID.
@@ -81,7 +85,7 @@ function createDebounceUpdate(): (refresh: () => void) => void {
 	/**
 	 * A cached setTimeout handler.
 	 */
-	var refreshTimeout: number | undefined;
+	var refreshTimeout: ReturnType<typeof setTimeout> | undefined;
 
 	/**
 	 * Performs react refresh on a delay and clears the error overlay.
@@ -205,11 +209,11 @@ export function shouldInvalidateReactRefreshBoundary(prevExports: any, nextExpor
 
 export var enqueueUpdate = createDebounceUpdate();
 export function executeRuntime(
-	moduleExports,
-	moduleId,
-	webpackHot,
-	refreshOverlay,
-	isTest
+	moduleExports: any,
+	moduleId: string,
+	webpackHot: ImportMeta["webpackHot"],
+	refreshOverlay?: any,
+	isTest?: boolean
 ) {
 	registerExportsForReactRefresh(moduleExports, moduleId);
 
