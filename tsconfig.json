@@ -17,7 +17,9 @@
     "rootDir": "src",
     "types": [
       "webpack-env",
-      "./src/types/webpack-hot.d.ts"
+      "./src/types/webpack-hot.d.ts",
+      "./src/types/prefresh-env.d.ts",
+      "./src/types/prefresh-utils.d.ts"
     ],
   },
   "include": ["src"]
