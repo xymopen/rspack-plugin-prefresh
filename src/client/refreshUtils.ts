@@ -8,15 +8,14 @@
  * https://github.com/pmmmwh/react-refresh-webpack-plugin/blob/0b960573797bf38926937994c481e4fec9ed8aa6/LICENSE
  */
 
-/* global __webpack_require__ */
-var Refresh = require("react-refresh/runtime");
+import Refresh from "react-refresh/runtime";
 
 /**
  * Extracts exports from a webpack module object.
- * @param {string} moduleId A Webpack module ID.
- * @returns {*} An exports object from the module.
+ * @param moduleId A Webpack module ID.
+ * @returns An exports object from the module.
  */
-function getModuleExports(moduleId) {
+export function getModuleExports(moduleId: string): any {
 	if (typeof moduleId === "undefined") {
 		// `moduleId` is unavailable, which indicates that this module is not in the cache,
 		// which means we won't be able to capture any exports,
@@ -50,11 +49,11 @@ function getModuleExports(moduleId) {
  * If this signature changes, it's unsafe to accept the boundary.
  *
  * This implementation is based on the one in [Metro](https://github.com/facebook/metro/blob/907d6af22ac6ebe58572be418e9253a90665ecbd/packages/metro/src/lib/polyfills/require.js#L795-L816).
- * @param {*} moduleExports A Webpack module exports object.
- * @returns {string[]} A React refresh boundary signature array.
+ * @param moduleExports A Webpack module exports object.
+ * @returns A React refresh boundary signature array.
  */
-function getReactRefreshBoundarySignature(moduleExports) {
-	var signature = [];
+function getReactRefreshBoundarySignature(moduleExports: any): string[] {
+	var signature: string[] = [];
 	signature.push(Refresh.getFamilyByType(moduleExports));
 
 	if (moduleExports == null || typeof moduleExports !== "object") {
@@ -76,21 +75,18 @@ function getReactRefreshBoundarySignature(moduleExports) {
 
 /**
  * Creates a helper that performs a delayed React refresh.
- * @returns {function(function(): void): void} A debounced React refresh function.
+ * @returns A debounced React refresh function.
  */
-function createDebounceUpdate() {
+function createDebounceUpdate(): (refresh: () => void) => void {
 	/**
 	 * A cached setTimeout handler.
-	 * @type {number | undefined}
 	 */
-	var refreshTimeout;
+	var refreshTimeout: number | undefined;
 
 	/**
 	 * Performs react refresh on a delay and clears the error overlay.
-	 * @param {function(): void} callback
-	 * @returns {void}
 	 */
-	function enqueueUpdate(callback) {
+	function enqueueUpdate(callback: () => void): void {
 		if (typeof refreshTimeout === "undefined") {
 			refreshTimeout = setTimeout(function () {
 				refreshTimeout = undefined;
@@ -107,10 +103,10 @@ function createDebounceUpdate() {
  * Checks if all exports are likely a React component.
  *
  * This implementation is based on the one in [Metro](https://github.com/facebook/metro/blob/febdba2383113c88296c61e28e4ef6a7f4939fda/packages/metro/src/lib/polyfills/require.js#L748-L774).
- * @param {*} moduleExports A Webpack module exports object.
- * @returns {boolean} Whether the exports are React component like.
+ * @param moduleExports A Webpack module exports object.
+ * @returns Whether the exports are React component like.
  */
-function isReactRefreshBoundary(moduleExports) {
+export function isReactRefreshBoundary(moduleExports: any): boolean {
 	if (Refresh.isLikelyComponentType(moduleExports)) {
 		return true;
 	}
@@ -150,11 +146,10 @@ function isReactRefreshBoundary(moduleExports) {
  * Checks if exports are likely a React component and registers them.
  *
  * This implementation is based on the one in [Metro](https://github.com/facebook/metro/blob/febdba2383113c88296c61e28e4ef6a7f4939fda/packages/metro/src/lib/polyfills/require.js#L818-L835).
- * @param {*} moduleExports A Webpack module exports object.
- * @param {string} moduleId A Webpack module ID.
- * @returns {void}
+ * @param moduleExports A Webpack module exports object.
+ * @param moduleId A Webpack module ID.
  */
-function registerExportsForReactRefresh(moduleExports, moduleId) {
+export function registerExportsForReactRefresh(moduleExports: any, moduleId: string): void {
 	if (Refresh.isLikelyComponentType(moduleExports)) {
 		// Register module.exports if it is likely a component
 		Refresh.register(moduleExports, moduleId + " %exports%");
@@ -187,11 +182,11 @@ function registerExportsForReactRefresh(moduleExports, moduleId) {
  * Compares previous and next module objects to check for mutated boundaries.
  *
  * This implementation is based on the one in [Metro](https://github.com/facebook/metro/blob/907d6af22ac6ebe58572be418e9253a90665ecbd/packages/metro/src/lib/polyfills/require.js#L776-L792).
- * @param {*} prevExports The current Webpack module exports object.
- * @param {*} nextExports The next Webpack module exports object.
- * @returns {boolean} Whether the React refresh boundary should be invalidated.
+ * @param prevExports The current Webpack module exports object.
+ * @param nextExports The next Webpack module exports object.
+ * @returns Whether the React refresh boundary should be invalidated.
  */
-function shouldInvalidateReactRefreshBoundary(prevExports, nextExports) {
+export function shouldInvalidateReactRefreshBoundary(prevExports: any, nextExports: any): boolean {
 	var prevSignature = getReactRefreshBoundarySignature(prevExports);
 	var nextSignature = getReactRefreshBoundarySignature(nextExports);
 
@@ -208,8 +203,8 @@ function shouldInvalidateReactRefreshBoundary(prevExports, nextExports) {
 	return false;
 }
 
-var enqueueUpdate = createDebounceUpdate();
-function executeRuntime(
+export var enqueueUpdate = createDebounceUpdate();
+export function executeRuntime(
 	moduleExports,
 	moduleId,
 	webpackHot,
@@ -230,10 +225,9 @@ function executeRuntime(
 				/**
 				 * A callback to performs a full refresh if React has unrecoverable errors,
 				 * and also caches the to-be-disposed module.
-				 * @param {*} data A hot module data object from Webpack HMR.
-				 * @returns {void}
+				 * @param data A hot module data object from Webpack HMR.
 				 */
-				function hotDisposeCallback(data) {
+				function hotDisposeCallback(data: any): void {
 					// We have to mutate the data object to get data registered and cached
 					data.prevExports = moduleExports;
 				}
@@ -241,10 +235,10 @@ function executeRuntime(
 			webpackHot.accept(
 				/**
 				 * An error handler to allow self-recovering behaviours.
-				 * @param {Error} error An error occurred during evaluation of a module.
-				 * @returns {void}
+				 * @param error An error occurred during evaluation of a module.
+				 * @returns
 				 */
-				function hotErrorHandler(error) {
+				function hotErrorHandler(error: Error): void {
 					if (typeof refreshOverlay !== "undefined" && refreshOverlay) {
 						refreshOverlay.handleRuntimeError(error);
 					}
@@ -286,12 +280,3 @@ function executeRuntime(
 		}
 	}
 }
-
-module.exports = Object.freeze({
-	enqueueUpdate: enqueueUpdate,
-	executeRuntime: executeRuntime,
-	getModuleExports: getModuleExports,
-	isReactRefreshBoundary: isReactRefreshBoundary,
-	shouldInvalidateReactRefreshBoundary: shouldInvalidateReactRefreshBoundary,
-	registerExportsForReactRefresh: registerExportsForReactRefresh
-});
