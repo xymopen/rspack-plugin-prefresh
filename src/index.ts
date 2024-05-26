@@ -19,11 +19,6 @@ const runtimePaths = [
 	refreshRuntimeDirPath
 ];
 
-/**
- * @typedef {Object} Options
- * @property {(string | RegExp | (string | RegExp)[] | null)=} include included resourcePath for loader
- * @property {(string | RegExp | (string | RegExp)[] | null)=} exclude excluded resourcePath for loader
- */
 class ReactRefreshRspackPlugin {
 	options: PluginOptions;
 
